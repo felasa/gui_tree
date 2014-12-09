@@ -1,0 +1,14 @@
+---
+title: "Lista de pendientes"
+output: html_document
+---
+
+- Completar funcionalidad para agregar familiares
+- Reemplazar asignaciones globales en un enviroment local
+- Reemplazar getQuery's por enunciados preparados y sendQuery's
+- Agregar funcionalidad para crear base de datos
+- Captura de errores en funciones
+- Validación de datos
+- Soporte para fechas y edad
+ - Calcular Edad
+- Contextualizar nombres de contenedores
