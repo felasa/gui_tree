@@ -1,9 +1,15 @@
-Package: gui_tree
+Package: guitree
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
+Title: Package for data entry and visualization of genealogy
+Version: 0.0.1
 Date: 2014-11-06
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: felasa
+Maintainer: felasa <felasa@gmail.com>
+Description: GUI for data entry with gWidgets, kinship2 for plotting pedigrees
+License: FREE
+Imports:
+    DBI,
+    RSQLite,
+    gWidgets,
+    tcltk,
+    kinship2
