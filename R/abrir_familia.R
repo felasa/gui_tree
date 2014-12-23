@@ -18,6 +18,26 @@ abrir_familia <- function(pedigree_id) {
   
   #query <- paste0("SELECT rowid, * FROM PERSONAS WHERE pedigree_id =", pedigree_id)
   personas <- dbGetQuery(con , query)
+  n <- nrow(personas)
+  m <- dbGetQuery(con, "SELECT COUNT(DISTINCT(condicion)) FROM condiciones")[[1]]
+  
+  query_aff <- paste("SELECT personas.rowid, condicion 
+                     FROM personas 
+                     JOIN condind 
+                     ON personas.rowid = condind.individuo_id
+                     JOIN
+                     condiciones 
+                     ON condiciones.rowid = condind.condicion_id 
+                     WHERE pedigree_id = ", pedigree_id )
+  
+  fooi <- dbGetQuery(con, query_aff)
+  affected <- matrix(0, nrow=n, ncol=m)
+  rownames(affected) <- personas$rowid
+  colnames(affected) <- unique(fooi$condicion)
+  
+  for (i in 1:nrow(fooi)) {
+    affected[as.character(fooi$rowid[i]), fooi$condicion[i]] <- 1
+  }
   
   
   window <- gwindow("Familia", visible=FALSE, horizontal = FALSE)
@@ -26,28 +46,37 @@ abrir_familia <- function(pedigree_id) {
   
   #individuos <- gtable(personas[ ,c("nombre","apellido","sexo","vive","brca","p53","cancer") ], cont=window)
   individuos <- gtable(personas[ ,c("rowid","nombre","apellido","sexo","fecha_nacimiento" ,"vive") ], 
-                       cont = frame, expand=TRUE, visible=FALSE, multiple = FALSE)
+                       cont = paned, expand=TRUE, visible=FALSE, multiple = FALSE)
   #sexo_sel <- svalue(individuos, drop=FALSE)$sexo
   #individuos <- gdf(personas[ ,c("rowid","nombre","apellido","sexo","fecha_nacimiento" ,"vive") ], 
-  #                     cont = frame, expand=TRUE)    
+  #                     cont = frame, expand=TRUE)
+  selected <- svalue(individuos)
+  pane2 <- gpanedgroup( cont = frame, horizontal=FALSE )
+  glabel("Seleccion:", container=pane2, anchor=c(-1,0))
+  campo_seleccion <- gedit( paste(personas$nombre[personas$rowid==1], personas$apellido[personas$rowid==1] ), container=pane2, expand=TRUE)
+  #visible(campo_seleccion) <- FALSE
   
-  group <- ggroup(cont = frame, horizontal = TRUE)
-  boton_agregar_padre <- gbutton("Agregar padre", cont=group)
-  boton_agregar_madre <- gbutton("Agregar madre", cont= group)
-  boton_agregar_hijo <- gbutton("Agregar hijo", cont=group)
-  boton_agregar_hermano <- gbutton("Agregar hermano(a)", cont=group)
+  group <- ggroup(cont = pane2, horizontal = TRUE)
+  
+  boton_agregar_padre <- gbutton("Agregar padre", cont = group)
+  boton_agregar_madre <- gbutton("Agregar madre", cont = group)
+  boton_agregar_hijo <- gbutton("Agregar hijo", cont = group)
+  boton_agregar_hermano <- gbutton("Agregar hermano(a)", cont = group)
   #boton_agregar_pareja <- gbutton("Agregar pareja", cont=group)
-  boton_grafica_arbol <- gbutton("Ver árbol", cont=group)
-  boton_regresar <- gbutton("Regresar", cont=group)
+  boton_grafica_arbol <- gbutton("Ver arbol", cont = group)
+  boton_regresar <- gbutton("Regresar", cont = group)
+  boton_actualizar <- gbutton("Actualizar", cont = group)
+  boton_condicion <- gbutton("Agregar condicion", cont=group)
   visible(window) <- TRUE
-  visible(individuos)<-TRUE
+  visible(individuos) <- TRUE
   
   ##AGREGAR PADRE 
   
   addHandlerClicked(boton_agregar_padre, handler=function(h, selected=svalue(individuos), origen = pedigree_id,  ...) {
     
     nuevo_individuo(pariente_rowid=selected, tipo="padre", origen)
-    dispose(window)      
+    #dispose(window)
+          
     
   })
   
@@ -99,11 +128,11 @@ abrir_familia <- function(pedigree_id) {
                                            momid = personas$madre_id,
                                            sex = personas$sexo_rowid,
                                            famid = personas$pedigree_id,
-                                           status = (personas$vive_rowid-1)
-                                           ##affected = as.matrix(personas[,c("brca","p53","cancer")])                              
-                      )[1]                     
+                                           status = (personas$vive_rowid-1),
+                                           affected = affected)[1]
+                      
                       plot.pedigree(pedigree, id=personas$nombre, col=c("red3", rep("black",dim(pedigree)-1)))
-                      #pedigree.legend(pedigree, location="bottomleft", radius=.2) 
+                      pedigree.legend(pedigree, location="bottomleft", radius=.2) 
                     })
   addHandlerChanged(boton_regresar, 
                     handler = function(h, ...) {
@@ -111,11 +140,35 @@ abrir_familia <- function(pedigree_id) {
                       dispose(window)
                       menu_familia()                        
                     }) 
-  addHandlerChanged(individuos, handler=function(h,...) {
-    cat(svalue(individuos))
+  addHandlerClicked(individuos, handler=function(h, ...) {
+    selected = svalue(individuos)
+    #cat(svalue(individuos))
     sexo_sel <<- svalue(individuos, drop=FALSE)$sexo    
     cat(sexo_sel)
+    svalue(campo_seleccion) <- paste(personas$nombre[personas$rowid==selected], personas$apellido[personas$rowid==selected])
   })
+  
+  addHandlerClicked(boton_actualizar, handler=function(h, ...) {
+    paste0("SELECT personas.rowid, *  
+         FROM 
+         personas
+         JOIN
+         vive
+         ON vive_rowid = vive.rowid
+         JOIN
+         sexo
+         ON
+         sexo_rowid = sexo.rowid
+         WHERE pedigree_id = ", pedigree_id) -> query
+    personas <- dbGetQuery(con , query)
+    individuos[,] <- personas[ ,c("rowid", "nombre", "apellido", "sexo", "fecha_nacimiento", "vive") ]
+  }
+  )
+  
+  addHandlerClicked(boton_condicion, handler=function(h,...) {
+    agregar_condiciones(rowid=svalue(individuos))
+  })
+  
   
 }
 
@@ -126,3 +179,5 @@ tiene_padre <- function(id) {
   result <- dbGetQuery(con, query)
   return(!all(is.na(result)))
 }
+
+

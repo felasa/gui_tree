@@ -23,7 +23,7 @@ dialogo_nuevo <- function() {
     nombre <- svalue(campo_nombre)
     apellido <- svalue(campo_apellido)
     fecha_nacimiento <- svalue(campo_fnacimiento)
-    sexo <- svalue(combo_sexo)
+    sexo <- ifelse(svalue(combo_sexo)=="Hombre",1,2)
     #cat(expediente, nombre, apellido, fecha_nacimiento, sexo)
     id <- nuevo_pedigree(expediente, nombre, apellido, sexo, vive=1, fecha_nacimiento)
     abrir_familia(id)

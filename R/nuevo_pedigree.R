@@ -10,7 +10,20 @@ nuevo_pedigree <- function(expediente, nombre, apellido, sexo, vive, fecha_nacim
   if (cuenta > 0) stop("ya existe pedigree con ese expediente")
   
   #Inserta el expediente en personas
-  query <- paste("INSERT INTO personas (expediente, nombre, apellido, sexo_rowid, vive_rowid, fecha_nacimiento) VALUES (", expediente,",", to_char(nombre),",", to_char(apellido),",", sexo,",", vive,",", to_char(fecha_nacimiento), ")")
+  query <- paste("INSERT INTO personas (expediente, nombre, apellido, sexo_rowid, vive_rowid, fecha_nacimiento) 
+                 VALUES (", 
+                 expediente,
+                 ",",
+                 to_char(nombre),
+                 ",",
+                 to_char(apellido),
+                 ",", 
+                 sexo,
+                 ",",
+                 vive,
+                 ",", 
+                 to_char(fecha_nacimiento),
+                 ")")
   dbGetQuery(con, query)
   
   #obtiene el id

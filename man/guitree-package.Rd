@@ -1,6 +1,6 @@
-\name{gui_tree-package}
-\alias{gui_tree-package}
-\alias{gui_tree}
+\name{guitree-package}
+\alias{guitree-package}
+\alias{guitree}
 \docType{package}
 \title{
 Data Entry of genealogy

@@ -11,5 +11,4 @@ Imports:
     DBI,
     RSQLite,
     gWidgets,
-    tcltk,
     kinship2

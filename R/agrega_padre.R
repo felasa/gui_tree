@@ -3,6 +3,7 @@ agrega_padre <- function(row_id, nombre, apellido, fecha_nacimiento, vive) {
   #checar si ya existe padre.
   query <- paste0("SELECT padre_id from personas WHERE personas.rowid = ", row_id)
   result <- dbGetQuery(con, query)
+  
   if (!is.na(result$padre_id)) stop("Ya se registró padre")
   
   #ids correspondientes al individuo activo
@@ -11,12 +12,21 @@ agrega_padre <- function(row_id, nombre, apellido, fecha_nacimiento, vive) {
   ped_id <- result$pedigree_id
   
   #insertar entrada correspondiente al padre
-  query <- paste0( "INSERT into personas (sexo_rowid, ref, pedigree_id, nombre, apellido, fecha_nacimiento, vive_rowid) VALUES (1, ", 
-                   row_id, ", ",
-                   ped_id, ", ", 
-                   to_char(nombre), ", ", 
-                   to_char(apellido), ", ", 
-                   to_char(fecha_nacimiento), ", ", vive,  ")" )  
+  query <- paste0( "INSERT into personas (sexo_rowid, ref, pedigree_id, nombre, apellido, fecha_nacimiento, vive_rowid) VALUES 
+                   (1, ", 
+                   row_id,
+                   ", ",
+                   ped_id,
+                   ", ", 
+                   to_char(nombre),
+                   ", ", 
+                   to_char(apellido),
+                   ", ", 
+                   to_char(fecha_nacimiento),
+                   ", ", 
+                   vive,
+                   ")"
+                   )  
   dbSendQuery(con, query)
   
   query <- paste("SELECT rowid FROM personas WHERE ref = ", row_id )

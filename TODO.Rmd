@@ -10,10 +10,8 @@ output: html_document
     * Calcular/Ingresar Edad
   * Reemplazar asignaciones globales en un enviroment local
   * Reemplazar getQuery's por enunciados preparados y sendQuery's
-  * Agregar funcionalidad para crear base de datos
   * Captura de errores en funciones
   * Validación de datos
   * Contextualizar nombres de contenedores
-  * Crear paquete
   * Hacer un wizard (asistente)
   

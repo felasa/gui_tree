@@ -6,9 +6,9 @@ menu_inicial <- function() {
   require(RSQLite)
   ##
   window <- gwindow( "Abrir BD", visible= FALSE, horizontal = FALSE )
-  
+  paned <- gpanedgroup(container = window, horizontal=FALSE)
   ## Seleccion archivo. o Nuevo
-  group <- ggroup(cont = window , horizontal = FALSE )
+  group <- ggroup(cont = paned , horizontal = FALSE )
   glabel( "Archivo BD:", cont = group, anchor = c(-1, 0) )
   start_dir <- gfilebrowse(text = "Seleccione archivo" ,
                            quote = FALSE,
@@ -16,16 +16,27 @@ menu_inicial <- function() {
                            cont = group )
   boton_abrir <- gbutton("Abrir" , cont = group )
   #addSpring(group)
-  #group2 <- ggroup(cont = window , horizontal = FALSE )
-  glabel( "Crear Nuevo:", cont = group, anchor = c(-1, 0) )
-  new_button <- gbutton("Nuevo \n (pendiente)", cont= group)
+  group2 <- ggroup(cont = paned , horizontal = FALSE )
+  glabel( "Crear Nuevo:", cont = group2, anchor = c(-1, 0) )
+  browse_button <- gfilebrowse(text="Elija ubicacion ... ", quote = FALSE, type = "selectdir", container = group2)
+  glabel("Nombre", container = group2, anchor = c(-1,0))
+  campo_filename <- gedit("", initial.msg="Nombre de archivo", container=group2)
   #addSpring(group2)  
+  boton_nuevo <-gbutton("Nueva base", container=group2)
   
   addHandlerChanged( boton_abrir , handler = function(h , ... ) {  
     db_file_name <<- svalue(start_dir)
     dispose(window)
     abrir_base(db_file_name)
   } )
+  
+  addHandlerClicked(boton_nuevo, handler = function(h, ...) {
+    db_file_name <- paste0(svalue(browse_button),"/", svalue(campo_filename),".db")
+    cat(db_file_name)
+    nueva_base(db_file_name)
+    abrir_base(db_file_name)
+    dispose(window)
+  })
   ## hacer visible la ventana
   visible( window ) <- TRUE
 }
