@@ -8,7 +8,7 @@ output: html_document
   * Implementar Condiciones
     * Soporte para fechas y edad
     * Calcular/Ingresar Edad
-  * Reemplazar asignaciones globales en un enviroment local
+  * Reemplazar asignaciones globales en un enviroment local: conexion BD hecho, otros?
   * Reemplazar getQuery's por enunciados preparados y sendQuery's
   * Captura de errores en funciones
   * Validación de datos

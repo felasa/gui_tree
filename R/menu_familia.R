@@ -1,7 +1,7 @@
 menu_familia <- function() {
   #OBTIENE DE ANTEMANO UNA LISTA DE EXPEDIENTES
   query <- "SELECT expediente, pedigrees.rowid as 'ped_id' from personas join pedigrees on personas.rowid = pedigrees.probate_id"
-  lista_pedigrees <- dbGetQuery(con , query)
+  lista_pedigrees <- dbGetQuery(globals$con , query)
   
   ## CREAR VENTANA, ETC
   window <- gwindow("Inicio", visible=FALSE)  
@@ -13,6 +13,7 @@ menu_familia <- function() {
   boton_abrir <- gbutton("Abrir", cont = group)
   #addSpring(group)
   boton_nuevo <- gbutton("Nuevo", cont = group)
+  boton_regresar <- gbutton("Regresar", cont = group)
   visible(window) <- TRUE
   
   ## ACCION AL APRETAR BOTON
@@ -39,5 +40,12 @@ menu_familia <- function() {
   addHandlerChanged(boton_nuevo,
                     handler = function(h, ...) {
                       dialogo_nuevo()
+                    })
+  
+  addHandlerClicked(boton_regresar,
+                    handler = function(h, ...) {
+                      sqliteCloseConnection(globals$con)
+                      dispose(window)
+                      menu_inicial()                      
                     })
 }

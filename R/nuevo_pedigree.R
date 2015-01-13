@@ -6,7 +6,7 @@ nuevo_pedigree <- function(expediente, nombre, apellido, sexo, vive, fecha_nacim
   expediente <- to_char(expediente)
   # checar si ya existe 
   query <- paste("SELECT COUNT(*) FROM personas WHERE expediente =", expediente)
-  cuenta  <- dbGetQuery(con, query)  
+  cuenta  <- dbGetQuery(globals$con, query)  
   if (cuenta > 0) stop("ya existe pedigree con ese expediente")
   
   #Inserta el expediente en personas
@@ -24,22 +24,22 @@ nuevo_pedigree <- function(expediente, nombre, apellido, sexo, vive, fecha_nacim
                  ",", 
                  to_char(fecha_nacimiento),
                  ")")
-  dbGetQuery(con, query)
+  dbGetQuery(globals$con, query)
   
   #obtiene el id
   query <- paste("SELECT rowid FROM personas WHERE expediente =", expediente)
-  id1 <- dbGetQuery(con, query)
+  id1 <- dbGetQuery(globals$con, query)
   
   #Inserta en pedigrees id correspondiente al probate
   query <- paste("INSERT INTO pedigrees (probate_id) VALUES (", id1, ")")
-  dbGetQuery(con, query)
+  dbGetQuery(globals$con, query)
   
   #obtener id del pedigree
   query <- paste("SELECT rowid FROM pedigrees WHERE probate_id =", id1)
-  id2 <- dbGetQuery(con, query)
+  id2 <- dbGetQuery(globals$con, query)
   
   #Inserta en personas id correspondiente al pedigree
   query <- paste("UPDATE personas SET pedigree_id =", id2, "WHERE rowid = ", id1)  
-  dbGetQuery(con, query)
+  dbGetQuery(globals$con, query)
   return(id2)
 }

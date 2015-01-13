@@ -13,14 +13,14 @@ nuevo_individuo <- function(pariente_rowid, tipo, origen) {
   
   glabel("Nombre(s):", cont = grupo1, anchor = c(-1, 0) ) 
   campo_nombre <- gedit("", initial.msg = "Nombre",
-                        cont= grupo1)
+                        cont= grupo1, coerce.with=toupper)
   glabel("Apellido:", cont = grupo1, anchor = c(-1, 0) ) 
   campo_apellido <- gedit("", initial.msg = "Apellido",
-                          cont= grupo1)
+                          cont= grupo1, coerce.with=toupper)
   
   glabel("Fecha de nacimiento:", cont = grupo1, anchor = c(-1, 0) ) 
   campo_fecha_nacimiento <- gedit("", initial.msg = "Fecha Nacimiento",
-                                  cont = grupo1)
+                                  cont = grupo1, coerce.with=valida_fecha)
   
   glabel("Sexo", cont = grupo1, anchor = c(-1, 0) ) 
   combo_sexo <- gcombobox ( c ( "Hombre","Mujer", NA ) , cont = grupo1, 
@@ -47,20 +47,22 @@ nuevo_individuo <- function(pariente_rowid, tipo, origen) {
                         agrega_padre(row_id = rowid, nombre = valores[["nombre"]], 
                                      apellido = valores[["apellido"]], fecha_nacimiento = valores[["fecha_nacimiento"]],
                                      vive = valores[["vive"]])
+                        dispose(window_ficha)                        
                       }
                       
                       if (tipo == "madre") {
                         agrega_madre(row_id = rowid, nombre = valores[["nombre"]], 
                                      apellido = valores[["apellido"]], fecha_nacimiento = valores[["fecha_nacimiento"]],
                                      vive = valores[["vive"]])
-                        
+                        dispose(window_ficha)                      
                       }
                       
                       if (tipo == "hermano") {
                         agrega_hermano(row_id = rowid, nombre = valores[["nombre"]], 
                                        apellido = valores[["apellido"]], sexo=valores[["sexo"]],
                                        fecha_nacimiento = valores[["fecha_nacimiento"]],
-                                       vive = valores[["vive"]])                        
+                                       vive = valores[["vive"]])    
+                        dispose(window_ficha)
                       }
                       
                       if (tipo == "hijo") {
@@ -68,13 +70,10 @@ nuevo_individuo <- function(pariente_rowid, tipo, origen) {
                                     apellido = valores[["apellido"]], sexo=valores[["sexo"]],
                                     fecha_nacimiento = valores[["fecha_nacimiento"]],
                                     vive = valores[["vive"]], ped_id=origen)                        
-                      }
+                      }                    
                       
-                      abrir_familia(origen)
                       dispose(window_ficha)
-                      
                     })
-  
   
   visible(window_ficha) <- TRUE
 }

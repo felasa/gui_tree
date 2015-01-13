@@ -1,6 +1,6 @@
 abrir_base <- function(filename) {
   if (is_valid_db(filename)) {
-    con <<- dbConnect(SQLite(), dbname = filename )    
+    globals$con <- dbConnect(SQLite(), dbname = filename )    
     menu_familia()
   }  
   else menu_inicial()

@@ -1,8 +1,8 @@
 nueva_base <- function(filename) {
   
   if (class(filename) != "character") stop("Nombre de archivo mal")
-  con <<- dbConnect(SQLite(), dbname = filename )
-  dbSendQuery(con, "CREATE TABLE personas
+  globals$con <- dbConnect(SQLite(), dbname = filename )
+  dbSendQuery(globals$con, "CREATE TABLE personas
   (
   expediente varchar(255),
   nombre varchar(255),
@@ -19,35 +19,35 @@ nueva_base <- function(filename) {
   FOREIGN KEY(vive_rowid) REFERENCES vive(rowid)
   );")
   
-  dbSendQuery(con, "CREATE TABLE pedigrees (
+  dbSendQuery(globals$con, "CREATE TABLE pedigrees (
            probate_id int,
            FOREIGN KEY(probate_id) REFERENCES personas(rowid));")
   
-  dbSendQuery(con, "CREATE TABLE sexo
+  dbSendQuery(globals$con, "CREATE TABLE sexo
   (
   sexo varchar(255)
   );")
   
-  dbSendQuery(con, "INSERT INTO sexo (sexo) VALUES ('Hombre')")
-  dbSendQuery(con, "INSERT INTO sexo (sexo) VALUES ('Mujer')")
+  dbSendQuery(globals$con, "INSERT INTO sexo (sexo) VALUES ('Hombre')")
+  dbSendQuery(globals$con, "INSERT INTO sexo (sexo) VALUES ('Mujer')")
   
-  dbSendQuery(con, "CREATE TABLE vive
+  dbSendQuery(globals$con, "CREATE TABLE vive
   (
   vive varchar(255)
   );")
   
   
-  dbSendQuery(con, "INSERT INTO vive (vive) VALUES ('Si')")
-  dbSendQuery(con, "INSERT INTO vive (vive) VALUES ('No')")
+  dbSendQuery(globals$con, "INSERT INTO vive (vive) VALUES ('Si')")
+  dbSendQuery(globals$con, "INSERT INTO vive (vive) VALUES ('No')")
   
  
 
-dbSendQuery(con, "CREATE TABLE condiciones
+dbSendQuery(globals$con, "CREATE TABLE condiciones
   (
   condicion varchar(255)
   );")
 
-dbSendQuery(con, "CREATE TABLE condind
+dbSendQuery(globals$con, "CREATE TABLE condind
   (
   individuo_id int,
   condicion_id int,
@@ -55,5 +55,5 @@ dbSendQuery(con, "CREATE TABLE condind
   FOREIGN KEY(condicion_id) REFERENCES condiciones(rowid)
   );")
 
-  sqliteCloseConnection(con)
+  sqliteCloseConnection(globals$con)
 }

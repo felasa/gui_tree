@@ -3,9 +3,9 @@ dialogo_nuevo <- function() {
   glabel("Expediente:", cont = window)
   campo_expediente <- gedit("", initial.msg="Expediente...", cont = window)
   glabel("Nombre:", initial.msg="Nombre", cont = window)
-  campo_nombre <- gedit("", initial.msg="Nombre...", cont = window)
+  campo_nombre <- gedit("", initial.msg="Nombre...", cont = window, coerce.with=toupper)
   glabel("Apellido", cont = window)
-  campo_apellido <- gedit("", initial.msg = "Apellido", cont = window)
+  campo_apellido <- gedit("", initial.msg = "Apellido", cont = window, coerce.with=toupper)
   
   group <- ggroup(con=window)
   glabel("Fecha de Nacimiento: \n (dd/mm/aaaa)", cont = group)

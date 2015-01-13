@@ -25,16 +25,16 @@ menu_inicial <- function() {
   boton_nuevo <-gbutton("Nueva base", container=group2)
   
   addHandlerChanged( boton_abrir , handler = function(h , ... ) {  
-    db_file_name <<- svalue(start_dir)
+    globals$db_file_name <- svalue(start_dir)
     dispose(window)
-    abrir_base(db_file_name)
+    abrir_base(globals$db_file_name)
   } )
   
   addHandlerClicked(boton_nuevo, handler = function(h, ...) {
     db_file_name <- paste0(svalue(browse_button),"/", svalue(campo_filename),".db")
-    cat(db_file_name)
-    nueva_base(db_file_name)
-    abrir_base(db_file_name)
+    cat(globals$db_file_name)
+    nueva_base(globals$db_file_name)
+    abrir_base(globals$db_file_name)
     dispose(window)
   })
   ## hacer visible la ventana
