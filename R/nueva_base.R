@@ -55,5 +55,7 @@ dbSendQuery(globals$con, "CREATE TABLE condind
   FOREIGN KEY(condicion_id) REFERENCES condiciones(rowid)
   );")
 
-  sqliteCloseConnection(globals$con)
+  #sqliteCloseConnection(globals$con)
+  dbDisconnect(globals$con)
+
 }

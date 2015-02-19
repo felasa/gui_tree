@@ -40,7 +40,7 @@ agregar_condiciones <- function(rowid) {
       query1 <- paste("INSERT INTO condiciones (condicion) VALUES (", to_char(condicion2), ")" )
       dbSendQuery(globals$con, query1)
       query_mez <- paste("SELECT rowid FROM condiciones WHERE condicion=", to_char(condicion2))
-      cond_id <- dbGetQuery(con, query_mez)$rowid
+      cond_id <- dbGetQuery(globals$con, query_mez)$rowid
       query2 <- paste("INSERT INTO 
                       condind (individuo_id, condicion_id) 
                       VALUES (",

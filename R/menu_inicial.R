@@ -5,8 +5,8 @@ menu_inicial <- function() {
   require(DBI)
   require(RSQLite)
   ##
-  window <- gwindow( "Abrir BD", visible= FALSE, horizontal = FALSE )
-  paned <- gpanedgroup(container = window, horizontal=FALSE)
+  menu_window <- gwindow( "Abrir BD", visible= FALSE, horizontal = FALSE )
+  paned <- gpanedgroup(container = menu_window, horizontal=FALSE)
   ## Seleccion archivo. o Nuevo
   group <- ggroup(cont = paned , horizontal = FALSE )
   glabel( "Archivo BD:", cont = group, anchor = c(-1, 0) )
@@ -26,17 +26,18 @@ menu_inicial <- function() {
   
   addHandlerChanged( boton_abrir , handler = function(h , ... ) {  
     globals$db_file_name <- svalue(start_dir)
-    dispose(window)
+    dispose(menu_window)
     abrir_base(globals$db_file_name)
   } )
   
   addHandlerClicked(boton_nuevo, handler = function(h, ...) {
-    db_file_name <- paste0(svalue(browse_button),"/", svalue(campo_filename),".db")
-    cat(globals$db_file_name)
+    globals$db_file_name <- paste0(svalue(browse_button),"/", svalue(campo_filename),".sqlite")
+    #cat(globals$db_file_name)
     nueva_base(globals$db_file_name)
+    dispose(menu_window)
     abrir_base(globals$db_file_name)
-    dispose(window)
+    
   })
   ## hacer visible la ventana
-  visible( window ) <- TRUE
+  visible( menu_window ) <- TRUE
 }

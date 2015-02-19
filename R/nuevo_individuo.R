@@ -42,7 +42,7 @@ nuevo_individuo <- function(pariente_rowid, tipo, origen) {
                       valores <- list(nombre=svalue(campo_nombre), apellido=svalue(campo_apellido),
                                       fecha_nacimiento=svalue(campo_fecha_nacimiento), sexo=ifelse(svalue(combo_sexo)=="Hombre",1,2),
                                       vive = ifelse(svalue(combo_vive)=="Si",1,2))
-                      print(valores)
+                      #print(valores)
                       if (tipo == "padre") { 
                         agrega_padre(row_id = rowid, nombre = valores[["nombre"]], 
                                      apellido = valores[["apellido"]], fecha_nacimiento = valores[["fecha_nacimiento"]],

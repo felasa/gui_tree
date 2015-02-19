@@ -6,7 +6,7 @@ abrir_familia <- function(pedigree_id) {
   familia <- obtener_datos(globals$con, pedigree_id)
   personas <- familia[["personas"]]
   affected <- familia[["affected"]]
-  personas$edad <- as.Date(personas$fecha_nacimiento, format="%d/%m/%Y")
+  personas$edad <- round( as.numeric(Sys.Date() - as.Date(personas$fecha_nacimiento, format="%d/%m/%Y"))/365.25)
   
   window_familia <- gwindow("Familia", visible=FALSE, horizontal = FALSE)
   frame <- gframe(cont = window_familia, horizontal=FALSE)
@@ -88,9 +88,11 @@ abrir_familia <- function(pedigree_id) {
                                            famid = personas$pedigree_id,
                                            status = (personas$vive_rowid-1),
                                            affected = affected)[1]
-                      
-                      plot.pedigree(pedigree, id=personas$nombre, col=c("red3", rep("black",dim(pedigree)-1)))
-                      pedigree.legend(pedigree, location="bottomleft", radius=.2) 
+                      labs <- paste(personas$edad, personas$nombre)                      
+                      plot.pedigree(pedigree, id=labs, col=c("red3", rep("black",dim(pedigree)-1)))->a
+                      #print(a$boxh)
+                      #print(a$boxw)
+                      pedigree.legend(pedigree, location="bottomleft", radius=a$boxh) 
                     })
   addHandlerChanged(boton_regresar, 
                     handler = function(h, ...) {
@@ -101,15 +103,17 @@ abrir_familia <- function(pedigree_id) {
   addHandlerClicked(individuos, handler=function(h, ...) {
     selected = svalue(individuos)
     #cat(svalue(individuos))
-    sexo_sel <<- svalue(individuos, drop=FALSE)$sexo    
-    cat(sexo_sel)
+    ss <<- svalue(individuos, drop=FALSE)    
+    cat(ss$nombre, ss$apellido, "\n")
+    sexo_sel <<- ss$sexo 
     svalue(campo_seleccion) <- paste(personas$nombre[personas$rowid==selected], personas$apellido[personas$rowid==selected])
   })
   addHandlerRightclick(individuos, handler=function(h, ...) {
     selected = svalue(individuos)
     #cat(svalue(individuos))
-    sexo_sel <<- svalue(individuos, drop=FALSE)$sexo    
-    cat(sexo_sel)
+    ss <<- svalue(individuos, drop=FALSE)    
+    cat(ss$nombre, ss$apellido, "\n")
+    sexo_sel <<- ss$sexo    
     svalue(campo_seleccion) <- paste(personas$nombre[personas$rowid==selected], personas$apellido[personas$rowid==selected])
   })  
   
@@ -117,8 +121,9 @@ abrir_familia <- function(pedigree_id) {
     obtener_datos(globals$con, pedigree_id) -> familia
 
     personas <<- familia[[1]]
+    personas$edad <<- round( as.numeric(Sys.Date() - as.Date(personas$fecha_nacimiento, format="%d/%m/%Y"))/365.25)
     affected <<- familia[[2]]
-    individuos[,] <- personas[ ,c("rowid", "nombre", "apellido", "sexo", "fecha_nacimiento", "vive") ]
+    individuos[,] <- personas[ ,c("rowid", "nombre", "apellido", "sexo", "edad", "vive") ]
   }
   )
   
